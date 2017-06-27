@@ -127,7 +127,7 @@ class FileDiff(melddoc.MeldDoc, gnomeglade.Component):
         'action-mode-changed': (GObject.SignalFlags.RUN_FIRST, None, (int,)),
     }
 
-    def __init__(self, num_panes):
+    def __init__(self, num_panes, line=None):
         """Start up an filediff with num_panes empty contents.
         """
         melddoc.MeldDoc.__init__(self)
@@ -154,6 +154,7 @@ class FileDiff(melddoc.MeldDoc, gnomeglade.Component):
         self.warned_bad_comparison = False
         self._keymask = 0
         self.meta = {}
+        self.line = line
         self.lines_removed = 0
         self.textview_overwrite = 0
         self.focus_pane = None
@@ -460,6 +461,16 @@ class FileDiff(melddoc.MeldDoc, gnomeglade.Component):
             buf = self.textbuffer[pane]
             it = buf.get_iter_at_line(start)
             self.textview[pane].scroll_to_iter(it, tolerance, True, 0.5, 0.5)
+
+    def go_to_line(self, line):
+        pane = 1 if self.num_panes == 2 else 0
+        buf = self.textbuffer[pane]
+        buf.place_cursor(buf.get_iter_at_line(line))
+        for pane in range(self.num_panes):
+            buf = self.textbuffer[pane]
+            it = buf.get_iter_at_line(line)
+            self.textview[pane].scroll_to_iter(it, 0.0, True, 0.5, 0.5)
+        self.textview[pane].grab_focus()
 
     def go_to_chunk(self, target, pane=None, centered=False):
         if target is None:
@@ -1111,8 +1122,12 @@ class FileDiff(melddoc.MeldDoc, gnomeglade.Component):
 
             chunk, prev, next_ = self.linediffer.locate_chunk(1, 0)
             target_chunk = chunk if chunk is not None else next_
-            self.scheduler.add_task(
-                lambda: self.go_to_chunk(target_chunk, centered=True), True)
+            if self.line is not None:
+                self.scheduler.add_task(
+                    lambda: self.go_to_line(self.line), True)
+            else:
+                self.scheduler.add_task(
+                    lambda: self.go_to_chunk(target_chunk, centered=True), True)
 
         self.queue_draw()
         self._connect_buffer_handlers()

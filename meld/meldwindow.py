@@ -579,9 +579,9 @@ class MeldWindow(gnomeglade.Component):
             doc.on_button_diff_clicked(None)
         return doc
 
-    def append_filediff(self, files, merge_output=None, meta=None):
+    def append_filediff(self, files, merge_output=None, meta=None, line=None):
         assert len(files) in (1, 2, 3)
-        doc = filediff.FileDiff(len(files))
+        doc = filediff.FileDiff(len(files), line=line)
         self._append_page(doc, "text-x-generic")
         doc.set_files(files)
         if merge_output is not None:
@@ -602,7 +602,7 @@ class MeldWindow(gnomeglade.Component):
         return doc
 
     def append_diff(self, paths, auto_compare=False, auto_merge=False,
-                    merge_output=None, meta=None):
+                    merge_output=None, meta=None, line=None):
         dirslist = [p for p in paths if os.path.isdir(p)]
         fileslist = [p for p in paths if os.path.isfile(p)]
         if dirslist and fileslist:
@@ -614,7 +614,7 @@ class MeldWindow(gnomeglade.Component):
             return self.append_filemerge(paths, merge_output=merge_output)
         else:
             return self.append_filediff(
-                paths, merge_output=merge_output, meta=meta)
+                paths, merge_output=merge_output, meta=meta, line=line)
 
     def append_vcview(self, location, auto_compare=False):
         doc = vcview.VcView()
@@ -654,7 +654,7 @@ class MeldWindow(gnomeglade.Component):
         doc.run_diff(path)
 
     def open_paths(self, paths, auto_compare=False, auto_merge=False,
-                   focus=False):
+                   focus=False, line=None):
         tab = None
         if len(paths) == 1:
             a = paths[0]
@@ -665,7 +665,7 @@ class MeldWindow(gnomeglade.Component):
 
         elif len(paths) in (2, 3):
             tab = self.append_diff(
-                paths, auto_compare=auto_compare, auto_merge=auto_merge)
+                paths, auto_compare=auto_compare, auto_merge=auto_merge, line=line)
         if tab:
             recent_comparisons.add(tab)
             if focus:

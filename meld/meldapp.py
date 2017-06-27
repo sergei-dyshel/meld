@@ -262,6 +262,9 @@ class MeldApp(Gtk.Application):
             "", "--diff", action="callback", callback=self.diff_files_callback,
             dest="diff", default=[],
             help=_("Create a diff tab for the supplied files or folders"))
+        parser.add_option(
+            "-l", "--line", action="store", type="int", dest="line", default=None,
+            help=_("Jump to line after opening"))
 
         def cleanup():
             if not command_line.get_is_remote():
@@ -331,7 +334,7 @@ class MeldApp(Gtk.Application):
                 tab = self.open_files(
                     files, auto_compare=options.auto_compare,
                     auto_merge=auto_merge, new_tab=options.newtab,
-                    focus=i == 0)
+                    focus=i == 0, line=options.line)
             except ValueError as err:
                 log.debug("Couldn't open comparison: %s", error, exc_info=True)
                 error = err
