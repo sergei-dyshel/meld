@@ -47,7 +47,7 @@ class MeldWindow(gnomeglade.Component):
 
         actions = (
             ("FileMenu", None, _("_File")),
-            ("New", Gtk.STOCK_NEW, _("_New Comparison..."), "<Primary>N",
+            ("New", None, _("_New Comparison..."), None,
                 _("Start a new comparison"),
                 self.on_menu_file_new_activate),
             ("Save", Gtk.STOCK_SAVE, None, None,
@@ -87,13 +87,13 @@ class MeldWindow(gnomeglade.Component):
                 self.on_menu_replace_activate),
 
             ("ChangesMenu", None, _("_Changes")),
-            ("NextChange", Gtk.STOCK_GO_DOWN, _("Next Change"), "<Alt>Down",
+            ("NextChange", Gtk.STOCK_GO_DOWN, _("Next Change"), "<Ctrl>N",
                 _("Go to the next change"),
                 self.on_menu_edit_down_activate),
-            ("PrevChange", Gtk.STOCK_GO_UP, _("Previous Change"), "<Alt>Up",
+            ("PrevChange", Gtk.STOCK_GO_UP, _("Previous Change"), "<Ctrl>P",
                 _("Go to the previous change"),
                 self.on_menu_edit_up_activate),
-            ("OpenExternal", None, _("Open Externally"), None,
+            ("OpenExternal", None, _("Open Externally"), "<Ctrl>E",
                 _("Open selected file or directory in the default external "
                   "application"),
                 self.on_open_external),
@@ -186,10 +186,10 @@ class MeldWindow(gnomeglade.Component):
 
         # Add alternate keybindings for Prev/Next Change
         accels = self.ui.get_accel_group()
-        (keyval, mask) = Gtk.accelerator_parse("<Primary>D")
-        accels.connect(keyval, mask, 0, self.on_menu_edit_down_activate)
-        (keyval, mask) = Gtk.accelerator_parse("<Primary>E")
-        accels.connect(keyval, mask, 0, self.on_menu_edit_up_activate)
+        # (keyval, mask) = Gtk.accelerator_parse("<Primary>D")
+        # accels.connect(keyval, mask, 0, self.on_menu_edit_down_activate)
+        # (keyval, mask) = Gtk.accelerator_parse("<Primary>E")
+        # accels.connect(keyval, mask, 0, self.on_menu_edit_up_activate)
         (keyval, mask) = Gtk.accelerator_parse("F5")
         accels.connect(keyval, mask, 0, self.on_menu_refresh_activate)
 
