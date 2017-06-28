@@ -1173,9 +1173,10 @@ class FileDiff(melddoc.MeldDoc, gnomeglade.Component):
         display_name = gfile.get_parse_name()
         primary = _("File %s has changed on disk") % display_name
         secondary = _("Do you want to reload the file?")
-        self.msgarea_mgr[pane].add_action_msg(
-            'dialog-warning-symbolic', primary, secondary, _("_Reload"),
-            self.on_revert_activate)
+        # self.msgarea_mgr[pane].add_action_msg(
+        #     'dialog-warning-symbolic', primary, secondary, _("_Reload"),
+        #     self.on_revert_activate)
+        self.on_revert_activate()
 
     def refresh_comparison(self, *args):
         """Refresh the view by clearing and redoing all comparisons"""
